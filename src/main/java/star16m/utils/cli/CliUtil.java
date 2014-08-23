@@ -50,4 +50,7 @@ public class CliUtil {
         }
         return options;
     }
+    public static void usage(String message) {
+        System.out.println("Usage : " + message);
+    }
 }
