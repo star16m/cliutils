@@ -3,6 +3,9 @@ package star16m.utils.cli.simplecli;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+
 import star16m.utils.cli.ValueType;
 import star16m.utils.cli.simplecli.value.SimpleDateValue;
 import star16m.utils.cli.simplecli.value.SimpleFileValue;
@@ -13,8 +16,10 @@ public class SimpleOptions {
 
 	private boolean parsed;
     private List<SimpleOption> simpleOptionList;
+    private Options options;
     public SimpleOptions() {
         this.simpleOptionList = new ArrayList<SimpleOption>();
+        this.options = new Options();
         this.parsed = false;
     }
     public SimpleOptions append(String opt, boolean isRequired, boolean hasArgument, String description) {
@@ -44,15 +49,15 @@ public class SimpleOptions {
     	default:
     		throw new IllegalArgumentException();
     	}
-        this.simpleOptionList.add(new SimpleOption(opt, isRequired, hasArgument, description, simpleValue));
+    	SimpleOption simpleOption = new SimpleOption(opt, isRequired, hasArgument, description, simpleValue);
+        Option option = new Option(simpleOption.getOpt(), simpleOption.hasArgument(), simpleOption.getDescription());
+        option.setRequired(simpleOption.isRequired());
+        options.addOption(option);
+        this.simpleOptionList.add(simpleOption);
         return this;
     }
     
-    public SimpleOption[] getSimpleOptionArray() {
-        return this.simpleOptionList.toArray(new SimpleOption[0]);
-    }
-    
-    public List<SimpleOption> getSimpleOptionList() {
+    public List<SimpleOption> getSimpleOptionSet() {
         return this.simpleOptionList;
     }
     
@@ -68,6 +73,10 @@ public class SimpleOptions {
         SimpleOption simpleOption = getOption(opt);
         return simpleOption.isSpecified();
     }
+    
+	public Options getOptions() {
+		return options;
+	}
     
     public Object getOptionValue(String opt) {
         SimpleOption simpleOption = getOption(opt);
