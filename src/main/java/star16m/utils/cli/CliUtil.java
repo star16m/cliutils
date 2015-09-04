@@ -74,5 +74,4 @@ public class CliUtil {
     	HelpFormatter formatter = new HelpFormatter();
     	formatter.printHelp(message, simpleOptions.getOptions());
     }
-    
 }
